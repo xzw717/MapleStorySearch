@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MapleStory Character Search</title>
+</head>
+<body>
+    <h1>MapleStory Character Search</h1>
+    <form id="searchForm">
+        <label for="characterName">Character Name:</label>
+        <input type="text" id="characterName" name="characterName">
+        <input type="submit" value="Search">
+    </form>
+    <div id="results"></div>
+
+    <script>
+        document.getElementById("searchForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            var characterName = document.getElementById("characterName").value;
+            var url = "https://api.maplestory.gg/v1/public/character/gms/" + characterName;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    var resultsDiv = document.getElementById("results");
+                    resultsDiv.innerHTML = "";
+                    if (data.success) {
+                        var character = data.data;
+                        var img = document.createElement("img");
+                        img.src = character.avatar;
+                        resultsDiv.appendChild(img);
+                        var server = document.createElement("p");
+                        server.textContent = "Server: " + character.server;
+                        resultsDiv.appendChild(server);
+                        var job = document.createElement("p");
+                        job.textContent = "Job: " + character.job;
+                        resultsDiv.appendChild(job);
+                        var exp = document.createElement("p");
+                        exp.textContent = "Exp: " + character.exp;
+                        resultsDiv.appendChild(exp);
+                    } else {
+                        resultsDiv.textContent = "Character not found";
+                    }
+                });
+        });
+    </script>
+</body>
+<html>
